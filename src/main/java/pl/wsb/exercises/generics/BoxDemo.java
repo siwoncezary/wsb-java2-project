@@ -1,5 +1,7 @@
 package pl.wsb.exercises.generics;
 
+import pl.wsb.app.model.City;
+
 import java.time.LocalDate;
 
 public class BoxDemo {
@@ -18,5 +20,6 @@ public class BoxDemo {
         Box objectBox = new Box(4);
         Integer content = (Integer) objectBox.getContent();
         System.out.println(content);
+        Box<City> cityBox = new Box<>(() -> new City(2, "AA","PL",124));
     }
 }
