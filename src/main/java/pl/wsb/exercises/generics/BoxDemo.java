@@ -7,6 +7,16 @@ public class BoxDemo {
         Box<String> stringBox = new Box<>("Tekst");
         Box<LocalDate> dateBox = new Box<>(LocalDate.now());
         Box<Integer> integerBox = new Box<>(null);
-
+        System.out.println(stringBox.getContent());
+        System.out.println(dateBox.getContent());
+        System.out.println(integerBox.getContent());
+        Box<Number> numberBox = new Box<>(null);
+        numberBox.setContent(23.5f);
+        Box<? extends Pizza> universalBox = new Box<>(new Pizza("dowolna"));
+        Pizza content1 = (Pizza) universalBox.getContent();
+        System.out.println(content1);
+        Box objectBox = new Box(4);
+        Integer content = (Integer) objectBox.getContent();
+        System.out.println(content);
     }
 }

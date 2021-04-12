@@ -1,7 +1,7 @@
 package pl.wsb.exercises.generics;
 
 public class Box<T> {
-    private final T content;
+    private T content;
 
     public Box(T content) {
         this.content = content;
@@ -9,6 +9,10 @@ public class Box<T> {
 
     public T getContent() {
         return content;
+    }
+
+    public void setContent(T content) {
+        this.content = content;
     }
 
     public boolean isEmpty(){
