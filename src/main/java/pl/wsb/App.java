@@ -18,9 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * JavaFX App
- */
+
 public class App extends Application {
     private List<City> listCity = new ArrayList<>(List.of(
       new City(1, "Cieszyn", "PL", 35_000),
