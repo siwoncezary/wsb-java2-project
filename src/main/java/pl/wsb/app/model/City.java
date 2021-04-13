@@ -18,4 +18,26 @@ public class City {
     private  double longitude;
     private  int elevation;
     private  String timezone;
+    public City(int id, String name, String countryCode, int population){
+        this.id = id;
+        this.name = name;
+        this.countryCode = countryCode;
+        this.population = population;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public int getPopulation() {
+        return population;
+    }
 }

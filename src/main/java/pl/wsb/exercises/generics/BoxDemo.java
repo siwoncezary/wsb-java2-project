@@ -20,6 +20,6 @@ public class BoxDemo {
         Box objectBox = new Box(4);
         Integer content = (Integer) objectBox.getContent();
         System.out.println(content);
-        //Box<City> cityBox = new Box<>(() -> new City(2, "AA","PL",124));
+        Box<City> cityBox = new Box<>(() -> new City(2, "AA","PL",124));
     }
 }
