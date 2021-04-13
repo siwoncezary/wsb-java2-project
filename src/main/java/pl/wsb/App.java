@@ -13,6 +13,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pl.wsb.app.model.City;
+import pl.wsb.service.CitiesService;
+import pl.wsb.service.CitiesServiceFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +22,8 @@ import java.util.List;
 
 
 public class App extends Application {
-    private List<City> listCity = new ArrayList<>(List.of(
-      new City(1, "Cieszyn", "PL", 35_000),
-      new City(2, "Paryż", "FR", 4_000_000),
-      new City(3, "New York", "US", 10_000_000)
-    ));
-    private ObservableList<City> cities = FXCollections.observableList(listCity);
-
+    private CitiesService citiesService = new CitiesServiceFile("c:\\data\\cities500.txt");
+    private ObservableList<City> cities = FXCollections.observableList(citiesService.findAll());
     @Override
     public void start(Stage stage) {
         var root = new VBox();
@@ -38,7 +35,11 @@ public class App extends Application {
         button.setOnAction(e -> {
             String name = nameField.getText();
             String countryCode = countryfield.getText();
-            City city = new City(cities.size(), name, countryCode, 1000);
+            City city = City.builder()
+                    .id(cities.size())
+                    .name(name)
+                    .countryCode(countryCode)
+                    .build();
             cities.add(city);
         });
 
