@@ -9,8 +9,10 @@ import javafx.stage.Stage;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SimpleAnimationApp extends Application {
+    AtomicBoolean isRunning = new AtomicBoolean(true);
     public static void main(String[] args) {
         launch();
     }
@@ -22,6 +24,7 @@ public class SimpleAnimationApp extends Application {
         Rectangle rect = new Rectangle(100, 100, 200, 100);
         rect.setOnMouseClicked(e -> {
             rect.setFill(Color.BLUE);
+            isRunning.set(!isRunning.get());
         });
         rect.setFill(Color.BLUEVIOLET);
         rect.setStroke(Color.BROWN);
@@ -38,7 +41,9 @@ public class SimpleAnimationApp extends Application {
                     Thread.sleep(40);
                 } catch (InterruptedException e) {
                 }
-                rect.setX(rect.getX() + 2);
+                if (isRunning.get()) {
+                    rect.setX(rect.getX() + 2);
+                }
             }
         });
         service.shutdown();
