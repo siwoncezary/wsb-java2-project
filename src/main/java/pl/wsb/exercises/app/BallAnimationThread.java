@@ -1,48 +1,62 @@
 package pl.wsb.exercises.app;
 
 import javafx.application.Platform;
-import javafx.geometry.Bounds;
-import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.shape.Circle;
 
 import java.util.Random;
 
-public class BallAnimationThread implements Runnable{
+public class BallAnimationThread implements Runnable {
     static Random random = new Random();
-    private final Group root;
+    private final Scene root;
     private final Circle ball;
     double dx, dy;
+    Thread thread;
 
-    public BallAnimationThread(Group root, Circle ball) {
+    public BallAnimationThread(Scene root, Circle ball) {
         this.root = root;
         this.ball = ball;
-        dx = 1 + random.nextInt(5);
-        dy = 1 + random.nextInt(5);
+        dx = 2 + random.nextInt(5);
+        dy = 2 + random.nextInt(5);
         dx = random.nextBoolean() ? -dx : dx;
         dy = random.nextBoolean() ? -dy : dy;
-        System.out.println(toString());
     }
 
     @Override
     public void run() {
-        Thread current = Thread.currentThread();
-        while(!current.isInterrupted()){
+        this.thread = Thread.currentThread();
+        double[] prevX = {dx};
+        double[] prevY = {dy};
+        while (!thread.isInterrupted()) {
             try {
                 Thread.sleep(40);
             } catch (InterruptedException e) {
-               current.interrupt();
+                thread.interrupt();
             }
-            if (0 > ball.getCenterX() - ball.getRadius() + dx || 500 < ball.getCenterX() + ball.getRadius() + dx){
+            var minX = 0;
+            var minY = 0;
+            var maxX = root.getWidth();
+            var maxY = root.getHeight();
+            if (minX >= ball.getCenterX() - ball.getRadius() + 1 || maxX <= ball.getCenterX() + ball.getRadius() + 1) {
                 dx = -dx;
             }
-            if (0 > ball.getCenterY() - ball.getRadius() + dy || 500 < ball.getCenterY() + ball.getRadius() + dy){
+            if (minY >= ball.getCenterY() - ball.getRadius() + 1 || maxY <= ball.getCenterY() + ball.getRadius() + 1) {
                 dy = -dy;
             }
+
             Platform.runLater(() -> {
-                ball.setCenterX(ball.getCenterX() + dx);
-                ball.setCenterY(ball.getCenterY() + dy);
+                prevX[0] = ball.getCenterX();
+                prevY[0] = ball.getCenterY();
+                double x = ball.getCenterX() + dx;
+                double y = ball.getCenterY() + dy;
+                ball.setCenterX(x);
+                ball.setCenterY(y);
             });
         }
+    }
+
+    public Thread getThread() {
+        return thread;
     }
 
     @Override

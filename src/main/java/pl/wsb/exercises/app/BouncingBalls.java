@@ -1,12 +1,10 @@
 package pl.wsb.exercises.app;
-
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -18,37 +16,29 @@ import java.util.stream.IntStream;
 public class BouncingBalls extends Application {
     List<Circle> balls;
     ExecutorService service = Executors.newFixedThreadPool(10);
-    List<Thread> threads;
     Group root;
     @Override
     public void start(Stage stage) throws Exception {
         root = prepareRoot(stage);
         balls = prepareBalls(10);
         root.getChildren().addAll(balls);
-        List<Thread> threads = runAnimation(balls);
+        runAnimation(balls);
     }
 
     public void stopAnimation(){
-        threads.stream().forEach(t -> t.interrupt());
+        service.shutdownNow();
     }
 
-    private List<Thread> runAnimation(List<Circle> balls){
-        var threads = new ArrayList<Thread>();
+    private void runAnimation(List<Circle> balls){
         for (Circle ball: balls){
-            threads.add(new Thread(new BallAnimationThread(root, ball)));
-            System.out.println(ball);
+            service.execute(new BallAnimationThread(root.getScene(), ball));
         }
-        for(Thread thread : threads){
-            thread.start();
-            System.out.println(thread);
-        }
-        return threads;
     }
 
     private List<Circle> prepareBalls(int size){
         Random random = new Random();
         return IntStream.range(0, size)
-                .mapToObj(i -> new Circle(random.nextInt(400), random.nextInt(400), 20 + random.nextInt(20), Color.BEIGE))
+                .mapToObj(i -> new Circle(50 + random.nextInt(200),50 + random.nextInt(200), 20 + random.nextInt(30), Color.BEIGE))
                 .collect(Collectors.toList());
     }
     private Group prepareRoot(Stage stage){
@@ -57,6 +47,9 @@ public class BouncingBalls extends Application {
         stage.setScene(scene);
         stage.setTitle("Bouncing balls");
         stage.show();
+        stage.setOnCloseRequest(e -> {
+            stopAnimation();
+        });
         return root;
     }
 
