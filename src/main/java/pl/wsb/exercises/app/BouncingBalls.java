@@ -6,24 +6,27 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class BouncingBalls extends Application {
     List<Circle> balls;
     ExecutorService service = Executors.newFixedThreadPool(10);
+    ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
     SimpleStringProperty pointsProperty = new SimpleStringProperty("Liczba punktów: 0");
+    SimpleStringProperty timeProperty = new SimpleStringProperty("Czas do końca gry: ");
     int points;
+    AtomicInteger gameTime = new AtomicInteger(20);
     Group root;
 
     @Override
@@ -32,10 +35,31 @@ public class BouncingBalls extends Application {
         balls = prepareBalls(10);
         root.getChildren().addAll(balls);
         runAnimation(balls);
+        startTimer();
+    }
+
+    private void startTimer(){
+        timer.scheduleAtFixedRate(() -> {
+           int time = gameTime.decrementAndGet();
+           timeProperty.set("Czas do końca gry: " + time);
+           if (time == 0){
+               stopAnimation();
+               stopTimer();
+               stopBallClicked(balls);
+           }
+        }, 0, 1000, TimeUnit.MILLISECONDS);
+    }
+
+    private void stopTimer(){
+        timer.shutdownNow();
     }
 
     public void stopAnimation() {
         service.shutdownNow();
+    }
+
+    private void stopBallClicked(List<Circle> balls){
+        balls.forEach(ball -> ball.setOnMouseClicked(e ->{}));
     }
 
     private void runAnimation(List<Circle> balls) {
@@ -62,11 +86,15 @@ public class BouncingBalls extends Application {
     private Group prepareRoot(Stage stage) {
         Group root = new Group();
         Text points = new Text(10, 50, "Liczba punktów: 0");
+        Text time = new Text(10, 100,"");
+        time.setFill(Color.RED);
+        time.setFont(Font.font("Arial", 18));
+        time.textProperty().bindBidirectional(timeProperty);
         points.setFill(Color.BROWN);
         Font font = Font.font("Arial Black", 20);
         points.setFont(font);
         points.textProperty().bindBidirectional(pointsProperty);
-        root.getChildren().add(points);
+        root.getChildren().addAll(points, time);
         Scene scene = new Scene(root, 500, 500);
         stage.setScene(scene);
         stage.setTitle("Bouncing balls");
