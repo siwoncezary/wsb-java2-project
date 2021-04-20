@@ -45,12 +45,8 @@ public class BallAnimationThread implements Runnable {
             }
 
             Platform.runLater(() -> {
-                prevX[0] = ball.getCenterX();
-                prevY[0] = ball.getCenterY();
-                double x = ball.getCenterX() + dx;
-                double y = ball.getCenterY() + dy;
-                ball.setCenterX(x);
-                ball.setCenterY(y);
+                ball.setCenterX(ball.getCenterX() + dx);
+                ball.setCenterY(ball.getCenterY() + dy);
             });
         }
     }
