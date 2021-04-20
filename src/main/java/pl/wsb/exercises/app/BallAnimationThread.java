@@ -25,8 +25,6 @@ public class BallAnimationThread implements Runnable {
     @Override
     public void run() {
         this.thread = Thread.currentThread();
-        double[] prevX = {dx};
-        double[] prevY = {dy};
         while (!thread.isInterrupted()) {
             try {
                 Thread.sleep(40);
@@ -43,7 +41,6 @@ public class BallAnimationThread implements Runnable {
             if (minY >= ball.getCenterY() - ball.getRadius() + 1 || maxY <= ball.getCenterY() + ball.getRadius() + 1) {
                 dy = -dy;
             }
-
             Platform.runLater(() -> {
                 ball.setCenterX(ball.getCenterX() + dx);
                 ball.setCenterY(ball.getCenterY() + dy);
