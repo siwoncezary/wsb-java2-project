@@ -23,6 +23,7 @@ public class MediaApp extends Application {
         var play = new Button("PLAY");
         Media media = new Media("file:///c:/data/hero.mp3");
         MediaPlayer mediaPlayer = new MediaPlayer(media);
+
         play.setOnAction(e -> mediaPlayer.play());
         root.getChildren().addAll(info, stop, play);
         var infoThread = new Thread(() ->{

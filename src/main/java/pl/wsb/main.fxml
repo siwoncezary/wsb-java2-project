@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.wsb.Main">
+   <children>
+      <Button fx:id="button" layoutX="29.0" layoutY="28.0" mnemonicParsing="false" onMouseDragEntered="#przerwa" prefHeight="102.0" prefWidth="540.0" text="Button" textAlignment="JUSTIFY">
+         <font>
+            <Font name="System Italic" size="48.0" />
+         </font></Button>
+   </children>
+</AnchorPane>

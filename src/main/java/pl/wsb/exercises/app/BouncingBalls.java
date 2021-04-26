@@ -1,5 +1,6 @@
 package pl.wsb.exercises.app;
 
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Group;
@@ -9,6 +10,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -25,6 +28,7 @@ public class BouncingBalls extends Application {
     ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor();
     SimpleStringProperty pointsProperty = new SimpleStringProperty("Liczba punktów: 0");
     SimpleStringProperty timeProperty = new SimpleStringProperty("Czas do końca gry: ");
+    List<FadeTransition> ballTransitions;
     int points;
     AtomicInteger gameTime = new AtomicInteger(20);
     Group root;
@@ -76,6 +80,11 @@ public class BouncingBalls extends Application {
                             ball.setOnMouseClicked(e -> {
                                 points++;
                                 pointsProperty.set("Liczba punktów: " + points);
+                                FadeTransition fade = new FadeTransition(Duration.millis(500), ball);
+                                fade.setToValue(0);
+                                fade.setFromValue(1);
+                                fade.play();
+                                ball.setOnMouseClicked(event -> {});
                             });
                             return ball;
                         }

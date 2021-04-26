@@ -3,12 +3,14 @@ package pl.wsb;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -26,7 +28,8 @@ public class App extends Application {
     private ObservableList<City> cities = FXCollections.observableList(citiesService.findAll());
     @Override
     public void start(Stage stage) {
-        var root = new VBox();
+        var root = new BorderPane();
+        var leftPanel = new VBox();
         var citiesView = new ListView<City>(cities);
         var button = new Button("Zapisz miasto");
         var nameField = new TextField("City name");
@@ -42,13 +45,17 @@ public class App extends Application {
                     .build();
             cities.add(city);
         });
-
-        root.getChildren().add(citiesView);
-        root.getChildren().add(button);
-        root.getChildren().add(nameField);
-        root.getChildren().add(countryfield);
+        root.setPadding(new Insets(10));
+        root.setCenter(citiesView);
+        root.setLeft(leftPanel);
+        leftPanel.setSpacing(10);
+        leftPanel.setPadding(new Insets(10));
+        leftPanel.getChildren().add(nameField);
+        leftPanel.getChildren().add(countryfield);
+        leftPanel.getChildren().add(button);
         citiesView.getSelectionModel().selectedItemProperty().addListener((ocity, prevCity, currentCity) ->{
-                    System.out.println(currentCity.getPopulation() + " " + currentCity.getCountryCode());
+                   countryfield.setText(currentCity.getCountryCode());
+                   nameField.setText(currentCity.getName());
                 });
         var scene = new Scene(root, 640, 480);
         stage.setScene(scene);
